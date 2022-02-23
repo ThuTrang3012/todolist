@@ -23,9 +23,14 @@ class TodoList extends React.Component {
     this.setState(state => ({
       todos: [todo, ...state.todos]
     }));
-    localStorage.setItem("todo", JSON.stringify(this.state.todos));
+    localStorage.setItem("todos", JSON.stringify(this.state.todos));
   };
-  
+  getEditTodo = todo =>
+  {
+    this.setState(state => ({
+      todos: [todo, ...state.todos]
+    }));
+  };
   toggleComplete = id => {
     this.setState(state => ({
       todos: state.todos.map(todo => {
@@ -53,7 +58,15 @@ class TodoList extends React.Component {
       todos: state.todos.filter(todo => todo.id !== id)
     }));
   };
-
+  handleEdit = id =>
+  {
+    this.setState(state => ({
+      todos : state.todos.filter(todo => todo.id !==id)
+    }));
+    this.setState(state => ({
+      todos : state.todos.find(todo => todo.id !==id)
+    }));
+  };
   removeAllTodosThatAreComplete = () => {
     this.setState(state => ({
       todos: state.todos.filter(todo => !todo.complete)
@@ -74,19 +87,45 @@ class TodoList extends React.Component {
     return (
       <div className="todoapp">
         <Header onSubmit={this.addTodo} />
-    
-        {todos.map(todo => (
-          <Todo
-            key={todo.id}
-            toggleComplete={() => this.toggleComplete(todo.id)}
-            onDelete={() => this.handleDeleteTodo(todo.id)}
-            todo={todo}
-          />
-        ))}
+        
+       <section className="main">
+        <input
+              className="toggle-all"
+              type="checkbox"
+              onClick={() =>
+                this.setState(state => ({
+                  todos: state.todos.map(todo => ({
+                    ...todo,
+                    complete: state.toggleAllComplete
+                  })),
+                  toggleAllComplete: !state.toggleAllComplete
+                }))
+              }
+            />
+               <label htmlFor="toggle-all" onClick={this.state.toggleAllComplete} ></label>
+        <ul className="todo-list">
+          {todos.map(todo => (
+            <Todo
+              key={todo.id}
+              toggleComplete={() => this.toggleComplete(todo.id)}
+              onDelete={() => this.handleDeleteTodo(todo.id)}
+              todo={todo}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') 
+                {
+                    this.handleEdit(event)
+                }
+            }}
+            />
+          ))}
+          </ul>
+       </section>
+        
+      
+        <div className="footer">
         <div>
           todos left: {this.state.todos.filter(todo => !todo.complete).length}
         </div>
-        <div className="footer">
           <button onClick={() => this.updateTodoToShow("all")}>all</button>
           <button onClick={() => this.updateTodoToShow("active")}>
             active
@@ -100,19 +139,9 @@ class TodoList extends React.Component {
           >  remove all 
           </button>
         ) : null}
-          <button
-            onClick={() =>
-              this.setState(state => ({
-                todos: state.todos.map(todo => ({
-                  ...todo,
-                  complete: state.toggleAllComplete
-                })),
-                toggleAllComplete: !state.toggleAllComplete
-              }))
-            }
-          >
-            toggle all : {`${this.state.toggleAllComplete}`}
-          </button>
+          
+            {/* toggle all : {`${this.state.toggleAllComplete}`}
+          </input> */}
         </div>
       </div>
     );
