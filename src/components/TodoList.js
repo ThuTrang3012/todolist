@@ -25,11 +25,11 @@ class TodoList extends React.Component {
     }));
     localStorage.setItem("todos", JSON.stringify(this.state.todos));
   };
-  getEditTodo = todo => {
-    this.setState(state => ({
-      todos: [todo, ...state.todos]
-    }));
-  };
+  // getEditTodo = todo => {
+  //   this.setState(state => ({
+  //     todos: [todo, ...state.todos]
+  //   }));
+  // };
   toggleComplete = (id, text) => {
     this.setState(state => ({
       todos: state.todos.map(todo => {
@@ -61,14 +61,14 @@ class TodoList extends React.Component {
       todos: state.todos.filter(todo => todo.id !== id)
     }));
   };
-  handleEdit = id => {
-    this.setState(state => ({
-      todos: state.todos.filter(todo => todo.id !== id)
-    }));
-    this.setState(state => ({
-      todos: state.todos.find(todo => todo.id !== id)
-    }));
-  };
+  // handleEdit = id => {
+  //   this.setState(state => ({
+  //     todos: state.todos.filter(todo => todo.id !== id)
+  //   }));
+  //   this.setState(state => ({
+  //     todos: state.todos.find(todo => todo.id !== id)
+  //   }));
+  // };
   removeAllTodosThatAreComplete = () => {
     this.setState(state => ({
       todos: state.todos.filter(todo => !todo.complete)
@@ -114,11 +114,11 @@ class TodoList extends React.Component {
                 toggleComplete={(value) => this.toggleComplete(todo.id, value || todo.text)}
                 onDelete={() => this.handleDeleteTodo(todo.id)}
                 todo={todo}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    this.handleEdit(event)
-                  }
-                }}
+                // onKeyDown={(event) => {
+                //   if (event.key === 'Enter') {
+                //     this.handleEdit(event)
+                //   }
+                // }}
               />
             ))}
           </ul>
