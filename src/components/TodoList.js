@@ -25,16 +25,19 @@ class TodoList extends React.Component {
     }));
     localStorage.setItem("todos", JSON.stringify(this.state.todos));
   };
-  getEditTodo = todo =>
-  {
+  getEditTodo = todo => {
     this.setState(state => ({
       todos: [todo, ...state.todos]
     }));
   };
-  toggleComplete = id => {
+  toggleComplete = (id, text) => {
     this.setState(state => ({
       todos: state.todos.map(todo => {
         if (todo.id === id) {
+
+          todo.edit && (todo.text = text);
+          todo.edit = !todo.edit && todo.complete;
+
           // suppose to update
           return {
             ...todo,
@@ -58,13 +61,12 @@ class TodoList extends React.Component {
       todos: state.todos.filter(todo => todo.id !== id)
     }));
   };
-  handleEdit = id =>
-  {
+  handleEdit = id => {
     this.setState(state => ({
-      todos : state.todos.filter(todo => todo.id !==id)
+      todos: state.todos.filter(todo => todo.id !== id)
     }));
     this.setState(state => ({
-      todos : state.todos.find(todo => todo.id !==id)
+      todos: state.todos.find(todo => todo.id !== id)
     }));
   };
   removeAllTodosThatAreComplete = () => {
@@ -87,9 +89,10 @@ class TodoList extends React.Component {
     return (
       <div className="todoapp">
         <Header onSubmit={this.addTodo} />
-        
-       <section className="main">
-        <input
+
+        <section className="main">
+          {todos.length !== 0 && <>
+            <input
               className="toggle-all"
               type="checkbox"
               onClick={() =>
@@ -102,30 +105,30 @@ class TodoList extends React.Component {
                 }))
               }
             />
-               <label htmlFor="toggle-all" onClick={this.state.toggleAllComplete} ></label>
-        <ul className="todo-list">
-          {todos.map(todo => (
-            <Todo
-              key={todo.id}
-              toggleComplete={() => this.toggleComplete(todo.id)}
-              onDelete={() => this.handleDeleteTodo(todo.id)}
-              todo={todo}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') 
-                {
+            <label htmlFor="toggle-all" onClick={this.state.toggleAllComplete} ></label>
+          </>}
+          <ul className="todo-list">
+            {todos.map(todo => (
+              <Todo
+                key={todo.id}
+                toggleComplete={(value) => this.toggleComplete(todo.id, value || todo.text)}
+                onDelete={() => this.handleDeleteTodo(todo.id)}
+                todo={todo}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
                     this.handleEdit(event)
-                }
-            }}
-            />
-          ))}
+                  }
+                }}
+              />
+            ))}
           </ul>
-       </section>
-        
-      
-        <div className="footer">
-        <div>
-          todos left: {this.state.todos.filter(todo => !todo.complete).length}
-        </div>
+        </section>
+
+
+        {todos.length !== 0 && <div className="footer">
+          <div>
+            todos left: {this.state.todos.filter(todo => !todo.complete).length}
+          </div>
           <button onClick={() => this.updateTodoToShow("all")}>all</button>
           <button onClick={() => this.updateTodoToShow("active")}>
             active
@@ -133,16 +136,16 @@ class TodoList extends React.Component {
           <button onClick={() => this.updateTodoToShow("complete")}>
             complete
           </button>
-        {this.state.todos.some(todo => todo.complete) ? 
-        (
-          <button onClick={this.removeAllTodosThatAreComplete}
-          >  remove all 
-          </button>
-        ) : null}
-          
-            {/* toggle all : {`${this.state.toggleAllComplete}`}
+          {this.state.todos.some(todo => todo.complete) ?
+            (
+              <button onClick={this.removeAllTodosThatAreComplete}
+              >  remove all
+              </button>
+            ) : null}
+
+          {/* toggle all : {`${this.state.toggleAllComplete}`}
           </input> */}
-        </div>
+        </div>}
       </div>
     );
   }
