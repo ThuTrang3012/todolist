@@ -5,52 +5,55 @@ class Todo extends React.Component {
     super(props);
     this.state = {
       open: false,
-      
     };
     this.handleEnter = this.handleEnter.bind(this);
   }
   handleEnter = (e) => {
     if (e.keyCode === 13) {
       this.props.toggleComplete(e.target.value);
+      this.setState((state) => ({ open: !state.open }));
     }
-    this.setState((state) => ({ open: !state.open }));
-   
   };
  
   render() {
     return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        {this.state.open ? (
-          <input
-            defaultValue={this.props.todo.text}
-            onKeyDown={this.handleEnter}
-            autoFocus
-          />
-        ) : (
-          
-            <div
+      <li>
+        <div  className="first"
             style={{
-              marginRight: "50px",
-              textDecoration: this.props.todo.complete ? "line-through" : "",
-              
+              textDecoration: this.props.todo.complete ? "line-through" : "",     
             }}>
-              <input
-               type="checkbox"
-               onClick={() => this.props.toggleComplete()}
-               onDoubleClick={() =>
-                this.setState((state) => ({ open: !state.open }))
-                
-                 }
-              />
-            
-            {this.props.todo.text}
-          </div>
-        
-          
-        )}
+                <div>
+                  <input
+                  type="checkbox"
+                  checked={this.props.todo.complete === true ? true : false}
+                  onClick={() => this.props.toggleComplete()}
+                  />
+                </div> 
+                <div style={{width: "100%"}} onDoubleClick={() => {
+                  this.setState((state) => ({ open: !state.open }))
+                }}>
+                  {this.state.open ? (
+                      <input
+                        className="input-edit"
+                        defaultValue={this.props.todo.text}
+                        onKeyDown={this.handleEnter}
+                        autoFocus
+                        onChange={() => {
+                          console.log('bacs')
+                        }}
+                      />
+                    ) : 
+                      this.props.todo.text
+                    }
+                </div>
+                <button className="btn-close" onClick={this.props.onDelete}>x</button>
+              {/* <div style={{justifyContent: "end"}}>
+                <button className="btn-close" onClick={this.props.onDelete}>x</button>
+              </div> */}
+          </div>   
 
-        <button onClick={this.props.onDelete}>x</button>
-      </div>
+        
+      </li>
     );
   }
 }
