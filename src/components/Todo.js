@@ -5,6 +5,7 @@ class Todo extends React.Component {
     super(props);
     this.state = {
       open: false,
+      
     };
     this.handleEnter = this.handleEnter.bind(this);
   }
@@ -13,8 +14,9 @@ class Todo extends React.Component {
       this.props.toggleComplete(e.target.value);
     }
     this.setState((state) => ({ open: !state.open }));
+   
   };
-
+ 
   render() {
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -25,18 +27,26 @@ class Todo extends React.Component {
             autoFocus
           />
         ) : (
-          <div
+          
+            <div
             style={{
               marginRight: "50px",
               textDecoration: this.props.todo.complete ? "line-through" : "",
-            }}
-            onClick={() => this.props.toggleComplete()}
-            onDoubleClick={() =>
-              this.setState((state) => ({ open: !state.open }))
-            }
-          >
+              
+            }}>
+              <input
+               type="checkbox"
+               onClick={() => this.props.toggleComplete()}
+               onDoubleClick={() =>
+                this.setState((state) => ({ open: !state.open }))
+                
+                 }
+              />
+            
             {this.props.todo.text}
           </div>
+        
+          
         )}
 
         <button onClick={this.props.onDelete}>x</button>
