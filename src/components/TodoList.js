@@ -42,21 +42,21 @@ class TodoList extends React.Component {
   //   }));
   // };
   toggleComplete = (id, text) => {
-    this.setState((state) => ({
-      todos: state.todos.map((todo) => {
-        if (todo.id === id) {
-          todo.edit && (todo.text = text);
-          todo.edit = !todo.edit && todo.complete;
+    const arr = this.state.todos.map((todo) => {
+      if (todo.id === id) {
+        return {
+          ...todo,
+          edit: !todo.edit && todo.complete,
+          text: text,
+          complete: !todo.complete,
+        };
+      } else {
+        return todo;
+      }
+    })
 
-          // suppose to update
-          return {
-            ...todo,
-            complete: !todo.complete,
-          };
-        } else {
-          return todo;
-        }
-      }),
+    this.setState((state) => ({
+      todos: arr
     }));
   };
 
