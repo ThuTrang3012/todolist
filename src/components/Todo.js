@@ -5,6 +5,7 @@ class Todo extends React.Component {
     super(props);
     this.state = {
       open: false,
+      delete: false,
     };
     this.handleEnter = this.handleEnter.bind(this);
   }
@@ -17,7 +18,14 @@ class Todo extends React.Component {
  
   render() {
     return (
-      <li>
+      <li onMouseEnter={()=> {
+        this.setState({delete: true});
+      }}
+      onMouseLeave={()=>
+      {
+        this.setState({delete: false});
+      }}
+      >
         <div  className="first"
             style={{
               textDecoration: this.props.todo.complete ? "line-through" : "",     
@@ -46,7 +54,9 @@ class Todo extends React.Component {
                       this.props.todo.text
                     }
                 </div>
-                <button className="btn-close" onClick={this.props.onDelete}>x</button>
+                {this.state.delete ? ( <button className="btn-close" onClick={this.props.onDelete}>x</button>) : null} 
+               
+
               {/* <div style={{justifyContent: "end"}}>
                 <button className="btn-close" onClick={this.props.onDelete}>x</button>
               </div> */}

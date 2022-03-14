@@ -106,8 +106,8 @@ li .first {
   align-items: center;
   justify-items: center;
 }
-.todo-list li .btn-close{
-  display: none;
+/* .todo-list li .btn-close{
+  
   position: absolute;
   top: 0;
   right: 10px;
@@ -117,15 +117,13 @@ li .first {
   margin: auto 0;
   font-size: 10px;
   color: #cc9a9a;
-  margin-bottom: 11px;
-  transition: color 0.2s ease-out;
-}
-.todo-list li .btn-close:hover {
+} */
+/* .todo-list li .btn-close:hover {
 	color: #af5b5e;
 }
 .todo-list li:hover .btn-close {
 	display: block;
-}
+} */
 
 input[type=checkbox] {
   font-size: 11px;
