@@ -2,6 +2,18 @@ import React from "react";
 import Todo from "./Todo";
 import Header from "./Header";
 
+const filterItem = (items = [], status = "") => {
+  switch (status) {
+    case "all":
+      return items;
+    case "active":
+      return items.filter((todo) => !todo.complete);
+    case "complete":
+      return items.filter((todo) => todo.complete);
+    default:
+      return items;
+  }
+};
 class TodoList extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +23,7 @@ class TodoList extends React.Component {
       toggleAllComplete: true,
     };
   }
-  
+
   componentDidMount = () => {
     const todos = localStorage.getItem("todos");
     if (todos) {
@@ -24,10 +36,9 @@ class TodoList extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.state.todos?.length !== prevState.todo?.length) {
-      if(this.state.todos.length === 0) {
-        localStorage.removeItem("todos")
-      } else
-      localStorage.setItem("todos", JSON.stringify(this.state.todos));
+      if (this.state.todos.length === 0) {
+        localStorage.removeItem("todos");
+      } else localStorage.setItem("todos", JSON.stringify(this.state.todos));
     }
   }
 
@@ -41,25 +52,33 @@ class TodoList extends React.Component {
   //     todos: [todo, ...state.todos]
   //   }));
   // };
-  toggleComplete = (id, text) => {
+  toggleComplete = (id, text, editInput = false) => {
     const arr = this.state.todos.map((todo) => {
       if (todo.id === id) {
-        return {
-          ...todo,
-          edit: !todo.edit && todo.complete,
-          text: text,
-          complete: !todo.complete,
-        };
+        if (editInput) {
+          return {
+            ...todo,
+            edit: !todo.edit && todo.complete,
+            text: text,
+            complete: todo.complete,
+          };
+        } else
+          return {
+            ...todo,
+            edit: !todo.edit && todo.complete,
+            text: text,
+            complete: !todo.complete,
+          };
       } else {
         return todo;
       }
-    })
+    });
 
     this.setState((state) => ({
-      todos: arr
+      todos: arr,
     }));
   };
-  
+
   updateTodoToShow = (s) => {
     this.setState({
       todoToShow: s,
@@ -80,7 +99,7 @@ class TodoList extends React.Component {
       })),
       toggleAllComplete: !state.toggleAllComplete,
     }));
-  handleEdit = (id) => {};
+
   removeAllTodosThatAreComplete = () => {
     this.setState((state) => ({
       todos: state.todos.filter((todo) => !todo.complete),
@@ -88,16 +107,7 @@ class TodoList extends React.Component {
   };
 
   render() {
-    let todos = [];
-
-    if (this.state.todoToShow === "all") {
-      todos = this.state.todos;
-    } else if (this.state.todoToShow === "active") {
-      todos = this.state.todos.filter((todo) => !todo.complete);
-    } else if (this.state.todoToShow === "complete") {
-      todos = this.state.todos.filter((todo) => todo.complete);
-    }
-
+    let todos = filterItem(this.state.todos, this.state.todoToShow);
     return (
       <div className="todoapp">
         <Header
@@ -105,6 +115,7 @@ class TodoList extends React.Component {
           handleToggleAll={this.handleToggleAll}
           todos={todos}
         />
+
         {todos.length !== 0 && (
           <section className="main">
             <ul className="todo-list">
@@ -112,15 +123,13 @@ class TodoList extends React.Component {
                 <Todo
                   key={todo.id}
                   toggleComplete={(value) =>
+                    this.toggleComplete(todo.id, value || todo.text, true)
+                  }
+                  toggleCompleteChecked={(value) =>
                     this.toggleComplete(todo.id, value || todo.text)
                   }
                   onDelete={() => this.handleDeleteTodo(todo.id)}
                   todo={todo}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      // this.handleEdit(event)
-                    }
-                  }}
                 />
               ))}
             </ul>
@@ -130,7 +139,7 @@ class TodoList extends React.Component {
         {this.state.todos.length > 0 && (
           <div className="footer">
             <div>
-              todos left:{" "}
+              Todos left:{" "}
               {this.state.todos.filter((todo) => !todo.complete).length}
             </div>
             <div>
