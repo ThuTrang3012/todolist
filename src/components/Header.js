@@ -2,8 +2,8 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
 class Header extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       id: uuidv4(),
       text: "",
