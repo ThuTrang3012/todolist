@@ -5,7 +5,7 @@ class Todo extends React.Component {
     super(props);
     this.state = {
       open: false,
-      delete: false
+      delete: false,
     };
     this.handleEnter = this.handleEnter.bind(this);
   }
@@ -18,15 +18,14 @@ class Todo extends React.Component {
  
   render() {
     return (
-      <li onMouseEnter={() => {
-        this.setState({
-          delete: true
-        })
-      }} onMouseLeave={() => {
-        this.setState({
-          delete: false
-        })
-      }}>
+      <li onMouseEnter={()=> {
+        this.setState({delete: true});
+      }}
+      onMouseLeave={()=>
+      {
+        this.setState({delete: false});
+      }}
+      >
         <div  className="first"
             style={{
               textDecoration: this.props.todo.complete ? "line-through" : "",     
@@ -38,9 +37,10 @@ class Todo extends React.Component {
                   onClick={() => this.props.toggleComplete()}
                   />
                 </div> 
-                <div style={{width: "100%"}} onDoubleClick={() => {
+                <div style={{width: "100%",display:"flex",marginLeft:"20px"}} onDoubleClick={() => {
                   this.setState((state) => ({ open: !state.open }))
                 }}>
+                
                   {this.state.open ? (
                       <input
                         className="input-edit"
@@ -55,13 +55,14 @@ class Todo extends React.Component {
                       this.props.todo.text
                     }
                 </div>
-                {this.state.delete ? (<button className="btn-close" onClick={this.props.onDelete}>x</button>) : null}
-                {/* <button className="btn-close" onClick={this.props.onDelete}>x</button> */}
+               
+               
+
               {/* <div style={{justifyContent: "end"}}>
                 <button className="btn-close" onClick={this.props.onDelete}>x</button>
               </div> */}
           </div>   
-
+          {this.state.delete ? ( <button className="btn-close" onClick={this.props.onDelete}>x</button>) : null} 
         
       </li>
     );
