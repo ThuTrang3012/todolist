@@ -1,64 +1,61 @@
-import React from "react";
+import React, {useState} from "react";
 
-class Todo extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      delete: false,
-    };
-    this.handleEnter = this.handleEnter.bind(this);
-  }
-  handleEnter = (e) => {
+const Todo = (props) => {
+  const [Open,setOpen] = useState(false)
+  const [Delete,setDelete] = useState(false)
+
+  // this.handleEnter = this.handleEnter.bind(this);
+
+  const handleEnter = (e) => {
     if (e.keyCode === 13) {
-      this.props.toggleComplete(e.target.value);
-      this.setState((state) => ({ open: !state.open }));
+      props.toggleComplete(e.target.value);
+      setOpen(!Open)
     }
   };
 
-  render() {
+  
     return (
       <li
         onMouseEnter={() => {
-          this.setState({ delete: true });
+          setDelete(true);
         }}
         onMouseLeave={() => {
-          this.setState({ open: false });
-          this.setState({ delete: false });
+          setOpen(false);
+          setDelete(false);
         }}
       >
         <div
           className="first"
           style={{
-            textDecoration: this.props.todo.complete ? "line-through" : "",
+            textDecoration: props.todo.complete ? "line-through" : "",
           }}
         >
           <div>
             <input
               type="checkbox"
-              checked={this.props.todo.complete === true ? true : false}
-              onClick={() => this.props.toggleCompleteChecked()}
+              checked={props.todo.complete === true ? true : false}
+              onClick={() => props.toggleCompleteChecked()}
               onChange={() => {}}
             />
           </div>
           <div
             style={{ width: "100%", display: "flex", marginLeft: "20px" }}
             onDoubleClick={() => {
-              this.setState((state) => ({ open: !state.open }));
+              setOpen(!Open);
             }}
           >
-            {this.state.open ? (
+            {Open? (
               <input
                 className="input-edit"
-                defaultValue={this.props.todo.text}
-                onKeyDown={this.handleEnter}
+                defaultValue={props.todo.text}
+                onKeyDown={handleEnter}
                 autoFocus
                 onChange={() => {
                   console.log("bacs");
                 }}
               />
             ) : (
-              this.props.todo.text
+              props.todo.text
             )}
           </div>
 
@@ -66,14 +63,14 @@ class Todo extends React.Component {
                 <button className="btn-close" onClick={this.props.onDelete}>x</button>
               </div> */}
         </div>
-        {this.state.delete ? (
-          <button className="btn-close" onClick={this.props.onDelete}>
+        {Delete ? (
+          <button className="btn-close" onClick={props.onDelete}>
             x
           </button>
         ) : null}
       </li>
     );
   }
-}
+
 
 export default Todo;
