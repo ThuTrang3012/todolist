@@ -106,13 +106,13 @@ const Todo = (props) => {
         <div
           className="first"
           style={{
-            textDecoration: props.todo.complete ? "line-through" : "",
+            textDecoration: props.todo.completed ? "line-through" : "",
           }}
         >
           <div>
             <input
               type="checkbox"
-              checked={props.todo.complete === true ? true : false}
+              checked={props.todo.completed === true ? true : false}
               onClick={() => props.toggleCompleteChecked()}
               onChange={() => {}}
             />
