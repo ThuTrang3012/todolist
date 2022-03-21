@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Todo from "./Todo";
 import Header from "./Header";
+import { v4 as uuidv4 } from "uuid";
 
 const filterItem = (items = [], status = "") => {
   switch (status) {
@@ -12,6 +13,7 @@ const filterItem = (items = [], status = "") => {
       return items.filter((todo) => todo.complete);
     default:
       return items;
+<<<<<<< HEAD
   }
 };
 class TodoList extends React.Component {
@@ -25,13 +27,25 @@ class TodoList extends React.Component {
   }
 
   componentDidMount = () => {
+=======
+  }
+};
+
+const TodoList = (props) => {
+  
+  const [todos, setTodos] = useState([])
+  const [toggleAllComplete,settoggleAllComplete] = useState(true)
+  const [todoToShow, setTodoToShow] = useState('all')
+  useEffect( () => {
+>>>>>>> e7f1505ef1bc921e62179ed16ac847f2fe49d2da
     const todos = localStorage.getItem("todos");
     if (todos) {
       const savedTodos = JSON.parse(todos);
-      this.setState({ todos: savedTodos });
+      setTodos(savedTodos);
     } else {
       console.log("No todos");
     }
+<<<<<<< HEAD
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -41,12 +55,41 @@ class TodoList extends React.Component {
       } else localStorage.setItem("todos", JSON.stringify(this.state.todos));
     }
   }
+=======
+    
+  },[]);
+  
+  // componentDidMount = () => {
+  //   const todos = localStorage.getItem("todos");
+  //   if (todos) {
+  //     const savedTodos = JSON.parse(todos);
+  //     this.setState({ todos: savedTodos });
+  //   } else {
+  //     console.log("No todos");
+  //   }
+  // };
+  
+  // componentDidUpdate(prevProps, prevState, snapshot) {
+  //   if (this.state.todos?.length !== prevState.todo?.length) {
+  //     if (this.state.todos.length === 0) {
+  //       localStorage.removeItem("todos");
+  //     } else localStorage.setItem("todos", JSON.stringify(this.state.todos));
+  //   }
+  // }
+ 
+ 
+>>>>>>> e7f1505ef1bc921e62179ed16ac847f2fe49d2da
 
-  addTodo = (todo) => {
-    this.setState((state) => ({
-      todos: [todo, ...state.todos],
-    }));
+ 
+  const addTodo= text => {
+    const newTodo = {    
+      id: uuidv4(),    
+      text: text,    
+      completed: false  
+    };
+    setTodos([...todos, newTodo])
   };
+<<<<<<< HEAD
   // getEditTodo = todo => {
   //   this.setState(state => ({
   //     todos: [todo, ...state.todos]
@@ -54,6 +97,11 @@ class TodoList extends React.Component {
   // };
   toggleComplete = (id, text, editInput = false) => {
     const arr = this.state.todos.map((todo) => {
+=======
+
+  const toggleComplete = (id, text, editInput = false) => {
+    let arr = todos.map((todo) => {
+>>>>>>> e7f1505ef1bc921e62179ed16ac847f2fe49d2da
       if (todo.id === id) {
         if (editInput) {
           return {
@@ -72,6 +120,7 @@ class TodoList extends React.Component {
       } else {
         return todo;
       }
+<<<<<<< HEAD
     });
 
     this.setState((state) => ({
@@ -82,15 +131,16 @@ class TodoList extends React.Component {
   updateTodoToShow = (s) => {
     this.setState({
       todoToShow: s,
+=======
+>>>>>>> e7f1505ef1bc921e62179ed16ac847f2fe49d2da
     });
-    console.log("todos ", this.state.todos);
+    setTodos(arr);
   };
 
-  handleDeleteTodo = (id) => {
-    this.setState((state) => ({
-      todos: state.todos.filter((todo) => todo.id !== id),
-    }));
+  const updateTodoToShow = (s) => {
+     setTodoToShow(s);
   };
+<<<<<<< HEAD
   handleToggleAll = () =>
     this.setState((state) => ({
       todos: state.todos.map((todo) => ({
@@ -104,15 +154,42 @@ class TodoList extends React.Component {
     this.setState((state) => ({
       todos: state.todos.filter((todo) => !todo.complete),
     }));
+=======
+  
+  const handleDeleteTodo = (id) => {
+    const arr = [...todos].filter(todo => todo.id !== id);
+    setTodos(arr);
+>>>>>>> e7f1505ef1bc921e62179ed16ac847f2fe49d2da
   };
+  // const handleToggleAll = () =>
+  // { 
+  //   const arr = [...todos].map((todo) => ({ 
+  //     ...todo, 
+  //     complete: toggleAllComplete, 
+  //   })) 
+  //   settoggleAllComplete(arr); 
+  // }; 
+  const handleToggleAll = (id) => { 
+    settoggleAllComplete( todos.map((todo) => 
+    ({ ...todo, complete: toggleAllComplete, }))
+     ) }
 
+<<<<<<< HEAD
   render() {
     let todos = filterItem(this.state.todos, this.state.todoToShow);
+=======
+  const removeAllTodosThatAreComplete = () => {
+    const arr = [...todos].filter(todo => !todo.complete);
+    setTodos(arr);
+     
+  };
+
+>>>>>>> e7f1505ef1bc921e62179ed16ac847f2fe49d2da
     return (
       <div className="todoapp">
         <Header
-          onSubmit={this.addTodo}
-          handleToggleAll={this.handleToggleAll}
+          onSubmit={addTodo}
+          handleToggleAll={handleToggleAll}
           todos={todos}
         />
 
@@ -123,12 +200,19 @@ class TodoList extends React.Component {
                 <Todo
                   key={todo.id}
                   toggleComplete={(value) =>
+<<<<<<< HEAD
                     this.toggleComplete(todo.id, value || todo.text, true)
                   }
                   toggleCompleteChecked={(value) =>
                     this.toggleComplete(todo.id, value || todo.text)
+=======
+                    toggleComplete(todo.id, value || todo.text, true)
                   }
-                  onDelete={() => this.handleDeleteTodo(todo.id)}
+                  toggleCompleteChecked={(value) =>
+                    toggleComplete(todo.id, value || todo.text)
+>>>>>>> e7f1505ef1bc921e62179ed16ac847f2fe49d2da
+                  }
+                  onDelete={() => handleDeleteTodo(todo.id)}
                   todo={todo}
                 />
               ))}
@@ -136,22 +220,22 @@ class TodoList extends React.Component {
           </section>
         )}
 
-        {this.state.todos.length > 0 && (
+        {[...todos].length > 0 && (
           <div className="footer">
             <div>
               Todos left:{" "}
+<<<<<<< HEAD
               {this.state.todos.filter((todo) => !todo.complete).length}
+=======
+              {[...todos].filter((todo) => !todo.complete).length}
+>>>>>>> e7f1505ef1bc921e62179ed16ac847f2fe49d2da
             </div>
             <div>
-              <button onClick={() => this.updateTodoToShow("all")}>All</button>
-              <button onClick={() => this.updateTodoToShow("active")}>
-                Active
-              </button>
-              <button onClick={() => this.updateTodoToShow("complete")}>
-                Complete
-              </button>
-              {this.state.todos.some((todo) => todo.complete) ? (
-                <button onClick={this.removeAllTodosThatAreComplete}>
+              <button onClick={() => updateTodoToShow("all")}>All</button>
+              <button onClick={() => updateTodoToShow("active")}>Active</button>
+              <button onClick={() => updateTodoToShow("complete")}>Complete</button>
+              {[...todos].some((todo) => todo.complete) ? (
+                <button onClick={removeAllTodosThatAreComplete}>
                   {" "}
                   Remove all
                 </button>
@@ -161,6 +245,12 @@ class TodoList extends React.Component {
         )}
       </div>
     );
+  
   }
+<<<<<<< HEAD
 }
 export default TodoList;
+=======
+
+export default TodoList;
+>>>>>>> e7f1505ef1bc921e62179ed16ac847f2fe49d2da
