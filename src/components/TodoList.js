@@ -174,9 +174,9 @@ const filterItem = (items = [], status = "") => {
     case "all":
       return items;
     case "active":
-      return items.filter((todo) => !todo.complete);
+      return items.filter((todo) => !todo.completed);
     case "complete":
-      return items.filter((todo) => todo.complete);
+      return items.filter((todo) => todo.completed);
     default:
       return items;
   }
@@ -187,6 +187,7 @@ const TodoList = (props) => {
   const [todos, setTodos] = useState([])
   const [toggleAllComplete,settoggleAllComplete] = useState(true)
   const [todoToShow, setTodoToShow] = useState('all')
+
   useEffect( () => {
     const todos = localStorage.getItem("todos");
     if (todos) {
@@ -196,7 +197,24 @@ const TodoList = (props) => {
       console.log("No todos");
     }  
   },[]);
-  
+
+  useEffect(() => {
+    if(todoToShow === 'all') {
+      if (todos.length === 0) {
+        localStorage.removeItem("todos");
+      } else localStorage.setItem("todos", JSON.stringify(todos));
+    }
+  },[todos]);
+
+  useEffect(() => {
+    const todosLocal = localStorage.getItem("todos");
+    if (todosLocal) {
+      const todoFirter = filterItem(JSON.parse(todosLocal), todoToShow)
+      setTodos(todoFirter);
+    } 
+  },[todoToShow]);
+
+
   const addTodo= text => {
     const newTodo = {    
       id: uuidv4(),    
@@ -212,16 +230,16 @@ const TodoList = (props) => {
         if (editInput) {
           return {
             ...todo,
-            edit: !todo.edit && todo.complete,
+            edit: !todo.edit && todo.completed,
             text: text,
-            complete: todo.complete,
+            completed: todo.completed,
           };
         } else
           return {
             ...todo,
-            edit: !todo.edit && todo.complete,
+            edit: !todo.edit && todo.completed,
             text: text,
-            complete: !todo.complete,
+            completed: !todo.completed,
           };
       } else {
         return todo;
@@ -238,6 +256,14 @@ const TodoList = (props) => {
     const arr = [...todos].filter(todo => todo.id !== id);
     setTodos(arr);
   };
+  const handleToggleAll = (id) => {
+    const newTodos = todos.map(todo => {
+      const newT = {...todo, completed: !toggleAllComplete}
+      return newT
+    })
+    settoggleAllComplete(!toggleAllComplete) 
+    setTodos(newTodos);
+  }
   // const handleToggleAll = () =>
   // { 
   //   const arr = [...todos].map((todo) => ({ 
@@ -246,13 +272,17 @@ const TodoList = (props) => {
   //   })) 
   //   settoggleAllComplete(arr); 
   // }; 
-  const handleToggleAll = (id) => { 
-    settoggleAllComplete( todos.map((todo) => 
-    ({ ...todo, complete: toggleAllComplete, }))
-     ) }
+  // const handleToggleAll = () => {
+  //   const newTodos = todos.map((todo) => ({ 
+  //     ...todo, 
+  //     completed: toggleAllComplete 
+  //   }))
+  //   settoggleAllComplete(newTodos)
+  //   setTodos(newTodos);
+  // }
 
   const removeAllTodosThatAreComplete = () => {
-    const arr = [...todos].filter(todo => !todo.complete);
+    const arr = [...todos].filter(todo => !todo.completed);
     setTodos(arr);
      
   };
@@ -285,20 +315,20 @@ const TodoList = (props) => {
           </section>
         )}
 
-        {[...todos].length > 0 && (
+        {[...todos].length >= 0 && (
           <div className="footer">
             <div>
               Todos left:{" "}
-              {[...todos].filter((todo) => !todo.complete).length}
+              {[...todos].filter((todo) => !todo.completed).length}
             </div>
             <div>
               <button onClick={() => updateTodoToShow("all")}>All</button>
               <button onClick={() => updateTodoToShow("active")}>Active</button>
-              <button onClick={() => updateTodoToShow("complete")}>Complete</button>
-              {[...todos].some((todo) => todo.complete) ? (
+              <button onClick={() => updateTodoToShow("complete")}>Completed</button>
+              {[...todos].some((todo) => todo.completed) ? (
                 <button onClick={removeAllTodosThatAreComplete}>
                   {" "}
-                  Remove all
+                  Clear completed
                 </button>
               ) : null}
             </div>

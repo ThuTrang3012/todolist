@@ -80,15 +80,15 @@
 import React, {useState} from "react";
 
 const Todo = (props) => {
-  const [Open,setOpen] = useState(false)
-  const [Delete,setDelete] = useState(false)
+  const [open,setOpen] = useState(false)
+  const [deleteTodo,setDelete] = useState(false)
 
   // this.handleEnter = this.handleEnter.bind(this);
 
   const handleEnter = (e) => {
     if (e.keyCode === 13) {
       props.toggleComplete(e.target.value);
-      setOpen(!Open)
+      setOpen(!open)
     }
   };
 
@@ -106,13 +106,13 @@ const Todo = (props) => {
         <div
           className="first"
           style={{
-            textDecoration: props.todo.complete ? "line-through" : "",
+            textDecoration: props.todo.completed ? "line-through" : "",
           }}
         >
           <div>
             <input
               type="checkbox"
-              checked={props.todo.complete === true ? true : false}
+              checked={props.todo.completed === true ? true : false}
               onClick={() => props.toggleCompleteChecked()}
               onChange={() => {}}
             />
@@ -120,10 +120,10 @@ const Todo = (props) => {
           <div
             style={{ width: "100%", display: "flex", marginLeft: "20px" }}
             onDoubleClick={() => {
-              setOpen(!Open);
+              setOpen(!open);
             }}
           >
-            {Open? (
+            {open? (
               <input
                 className="input-edit"
                 defaultValue={props.todo.text}
@@ -142,7 +142,7 @@ const Todo = (props) => {
                 <button className="btn-close" onClick={this.props.onDelete}>x</button>
               </div> */}
         </div>
-        {Delete ? (
+        {deleteTodo ? (
           <button className="btn-close" onClick={props.onDelete}>
             x
           </button>
